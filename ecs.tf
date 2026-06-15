@@ -3,23 +3,86 @@ resource "aws_iam_instance_profile" "name" {
   role = aws_iam_role.ec2_role.name
 }
 
-resource "aws_instance" "ecs_host" {
-  ami                  = "ami-006b300825259765d" 
-  instance_type        = "t2.micro"
-  subnet_id            = aws_subnet.private_subnet["eu-west-1a"].id 
-  vpc_security_group_ids = [aws_security_group.sg.id]
-  iam_instance_profile = aws_iam_instance_profile.name.name
+# resource "aws_instance" "ecs_host" {
+#   ami                  = "ami-006b300825259765d" 
+#   instance_type        = "t2.micro"
+#   subnet_id            = aws_subnet.private_subnet["eu-west-1a"].id 
+#   vpc_security_group_ids = [aws_security_group.sg.id]
+#   iam_instance_profile = aws_iam_instance_profile.name.name
 
-  # CRITICAL: This script tells the standalone instance to register with your cluster
-  user_data = <<-EOF
+#   # CRITICAL: This script tells the standalone instance to register with your cluster
+#   user_data = <<-EOF
+#               #!/bin/bash
+#                yum update -y
+#               yum install docker
+#               service docker start
+#               usermod -a -G docker ec2-user
+
+#               echo ECS_CLUSTER=${aws_ecs_cluster.cluster_ecs.name} >> /etc/ecs/ecs.config 
+#               EOF
+
+#   tags = {
+#     Name = "standalone-ecs-host"
+#   }
+# }
+
+
+resource "aws_launch_template" "template" {
+  iam_instance_profile {
+    arn = aws_iam_instance_profile.name.arn
+  }
+  image_id = "ami-006b300825259765d"
+  instance_type = "t2.micro"
+  vpc_security_group_ids = [ aws_security_group.sg.id ]
+  user_data = base64encode( <<-EOF
               #!/bin/bash
-              echo ECS_CLUSTER=${aws_ecs_cluster.cluster_ecs.name} >> /etc/ecs/ecs.config
-              EOF
+               yum update -y
+              yum install docker
+              service docker start
+              usermod -a -G docker ec2-user
 
-  tags = {
-    Name = "standalone-ecs-host"
+              echo ECS_CLUSTER=${aws_ecs_cluster.cluster_ecs.name} >> /etc/ecs/ecs.config 
+              EOF 
+              )
+  
+}
+
+
+
+
+
+resource "aws_autoscaling_group" "example" {
+
+  vpc_zone_identifier = [for s in aws_subnet.private_subnet : s.id]
+  desired_capacity    = 1
+  max_size            = 1
+  min_size            = 1
+  launch_template {
+    id      = aws_launch_template.template.id
+    version = "$Latest"
   }
 }
+
+
+resource "aws_ecs_capacity_provider" "cluster_ecs" {
+  name = "example"
+
+  auto_scaling_group_provider {
+    auto_scaling_group_arn         = aws_autoscaling_group.example.arn
+
+    managed_scaling {
+      maximum_scaling_step_size = 2
+      minimum_scaling_step_size = 1
+      status                    = "ENABLED"
+      target_capacity           = 1
+    }
+  }
+}
+
+
+
+
+
 
 resource "aws_ecs_cluster" "cluster_ecs" {
   name = "cluster_ecs"
