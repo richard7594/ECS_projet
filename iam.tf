@@ -41,6 +41,11 @@ resource "aws_iam_role_policy_attachment" "ecs_permission" {
   role       = aws_iam_role.ec2_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }
+resource "aws_iam_role_policy_attachment" "ecs_permission1" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedEC2InstanceDefaultPolicy"
+}
+
 ##
 
 data "aws_iam_policy_document" "ecs_task_execution_assume_role" {

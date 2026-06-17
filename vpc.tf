@@ -61,7 +61,7 @@ resource "aws_route_table_association" "igw" {
 }
 
 resource "aws_security_group" "alb_sg" {
-
+  name = "alb_sg"
   vpc_id = aws_vpc.vpc.id
   ingress {
     from_port   = 80
@@ -81,6 +81,7 @@ resource "aws_security_group" "alb_sg" {
 }
 
 resource "aws_security_group" "sg" {
+  name = "instance_sg"
   vpc_id = aws_vpc.vpc.id
 
   ingress {
