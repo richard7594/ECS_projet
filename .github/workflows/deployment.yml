@@ -60,6 +60,6 @@ jobs:
       run: terraform init
     - name: apply
       run: terraform apply myplan
-      with:
+    - with:
         name: artifact
     needs: _validate_        
