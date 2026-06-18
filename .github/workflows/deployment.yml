@@ -8,6 +8,7 @@ on:
 jobs:
   _fmt_:
     name: fmt
+    runs-on: ubuntu-latest
     services:
       image: hashicorp/terraform:latest
       entrypoint: ""
