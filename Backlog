@@ -1,0 +1,3 @@
+- pipeline github action (evalution : la pipeline doit builder l'image) + précommit pour fmt en local
+- push docker image to ECR 
+- arrange ecs_task

@@ -1,0 +1,36 @@
+name : Terraform_deploy
+on:
+  push:
+    branches:
+    - 'main'
+
+
+jobs:
+  _fmt_:
+    name: fmt
+    services:
+      image: hashicorp/terraform:latest
+      entrypoint: ""
+    steps:
+    - uses: actions/checkout@v6
+    - name : init 
+      run : terraform init 
+    - name: fmt
+      run : terraform fmt --recursive
+
+
+jobs:
+  _validate_:
+    name: validate
+    services:
+      image: hashicorp/terraform:latest
+      entrypoint: ""
+    steps:
+    - uses: actions/checkout@v6
+    - name : init 
+      run : terraform init
+    - name: validate
+      run : terraform validate
+  
+
+      
