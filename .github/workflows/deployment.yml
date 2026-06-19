@@ -71,12 +71,11 @@ jobs:
     container:
       image: hashicorp/terraform:latest  
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/download-artifact@v4
+      with:
+        name: myplan
     - name: init 
       run: terraform init
     - name: apply
       run: terraform apply myplan
-    - uses: actions/download-artifact@v4
-      with:
-        name: myplan
     needs: _plan_        
