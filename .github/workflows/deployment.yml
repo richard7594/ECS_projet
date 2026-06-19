@@ -6,6 +6,19 @@ on:
   workflow_dispatch:  
 
 jobs:
+  _build_:
+    name : build_app_image
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - name: install docker
+      run: |
+       curl -fsSL https://get.docker.com -o get-docker.sh && \
+       sh get-docker.sh
+    - name: build  
+      run: docker build .
+
+
   _fmt_:
     name: fmt
     runs-on: ubuntu-latest
