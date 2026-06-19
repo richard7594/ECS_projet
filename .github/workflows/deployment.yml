@@ -15,6 +15,7 @@ jobs:
       image: hashicorp/terraform:latest
     steps:
     - uses: actions/checkout@v6
+    - run: echo "AWS_ACCESS_KEY_ID = $AWS_ACCESS_KEY_ID"
     - name : init 
       run : terraform init 
     - name: fmt
