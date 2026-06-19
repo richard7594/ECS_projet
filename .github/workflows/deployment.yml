@@ -19,7 +19,7 @@ jobs:
     - name: install docker AWS CLI
       run: |
        curl -fsSL https://get.docker.com -o get-docker.sh && \
-       sh get-docker.sh && \
+       sh get-docker.sh 
     - name: build  
       run: docker build -t $REPO:1.0 .
     - name: push image
