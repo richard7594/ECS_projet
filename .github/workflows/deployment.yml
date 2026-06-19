@@ -9,14 +9,26 @@ jobs:
   _build_:
     name : build_app_image
     runs-on: ubuntu-latest
+    environment: DEV
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      REPO:  ${{ secrets.REPO }}
     steps:
     - uses: actions/checkout@v6
-    - name: install docker
+    - name: install docker AWS CLI
       run: |
        curl -fsSL https://get.docker.com -o get-docker.sh && \
-       sh get-docker.sh
+       sh get-docker.sh && \
+       curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+       unzip awscliv2.zip && \
+       ./aws/install
     - name: build  
-      run: docker build .
+      run: docker build -t $REPO:1.0 .
+    - name: push image
+      run: |
+        aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin $REPO && \
+        docker push $REPO:1.0
 
 
   _fmt_:
