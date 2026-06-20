@@ -25,7 +25,7 @@ jobs:
     - name: push image
       run: |
         aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin $REPO && \
-        docker push $REPO:1.0
+        docker push $REPO:app
 
 
   _fmt_:
@@ -40,7 +40,7 @@ jobs:
     steps:
     - uses: actions/checkout@v6
     - name : init 
-      run : terraform init 
+      run : terraform init -backend-config='./backends/backend.hcl'
     - name: fmt
       run : terraform fmt --recursive
     - uses: actions/upload-artifact@v7
@@ -63,7 +63,7 @@ jobs:
       with:
         name: fmt
     - name: init 
-      run: terraform init
+      run: terraform init -backend-config='./backends/backend.hcl'
     - name: validate
       run: terraform validate
     - uses: actions/upload-artifact@v7
@@ -86,7 +86,7 @@ jobs:
       with:
         name: validate
     - name: init 
-      run: terraform init
+      run: terraform init -backend-config='./backends/backend.hcl'
     - name: plan
       run: terraform plan -out=myplan
     - uses: actions/upload-artifact@v7
@@ -111,7 +111,26 @@ jobs:
       with:
         name: myplan
     - name: init 
-      run: terraform init
+      run: terraform init -backend-config='./backends/backend.hcl'
     - name: apply
       run: terraform apply myplan
     needs: _plan_        
+
+  _destroy_:
+    name: apply
+    runs-on: ubuntu-latest
+    environment: PRD
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    container:
+      image: hashicorp/terraform:latest  
+    steps:
+    - uses: actions/download-artifact@v7
+      with:
+        name: myplan
+    - name: init 
+      run: terraform init -backend-config='./backends/backend.hcl'
+    - name: destroy
+      run: terraform destroy --auto-approve
+    needs: _plan_          

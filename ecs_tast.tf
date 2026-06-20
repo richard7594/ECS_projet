@@ -1,4 +1,12 @@
 
+ephemeral "aws_ecr_authorization_token" "ecr_token" { }
+data "aws_ecr_image" "image"{
+  repository_name = "ecs_projet"
+  image_tag = "app"
+
+}
+
+
 resource "aws_ecs_task_definition" "task" {
   family             = "service"
   network_mode       = "bridge"
@@ -6,7 +14,7 @@ resource "aws_ecs_task_definition" "task" {
   container_definitions = jsonencode([
     {
       name      = "app"
-      image     = "jenkins/jenkins:latest"
+      image     = "${aws_ecr_image.image.image_uri}"
       cpu       = 10
       memory    = 512
       essential = true
