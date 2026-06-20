@@ -1,9 +1,9 @@
 
-ephemeral "aws_ecr_authorization_token" "ecr_token" { }
+ephemeral "aws_ecr_authorization_token" "ecr_token" {}
 
-data "aws_ecr_image" "image"{
+data "aws_ecr_image" "image" {
   repository_name = "ecs_projet"
-  image_tag = "app"
+  image_tag       = "app"
 
 }
 
@@ -22,7 +22,7 @@ resource "aws_ecs_task_definition" "task" {
       portMappings = [
         {
           containerPort = 8080
-          hostPort      = 8081 
+          hostPort      = 8081
         }
       ]
 
@@ -30,7 +30,7 @@ resource "aws_ecs_task_definition" "task" {
         logDriver = "awslogs"
         options = {
           awslogs-group         = aws_cloudwatch_log_group.app.name
-          awslogs-region        = "eu-west-1"  
+          awslogs-region        = "eu-west-1"
           awslogs-stream-prefix = "ecs"
         }
       }
@@ -47,7 +47,7 @@ resource "aws_ecs_service" "app" {
   desired_count        = 2 #number of task
   force_new_deployment = true
 
-   capacity_provider_strategy {
+  capacity_provider_strategy {
     capacity_provider = aws_ecs_capacity_provider.cluster_ecs.name
     weight            = 100
   }

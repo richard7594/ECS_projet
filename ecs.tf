@@ -37,7 +37,7 @@ resource "aws_autoscaling_group" "example" {
   desired_capacity    = 1
   max_size            = 2
   min_size            = 1
-  target_group_arns = [ aws_lb_target_group.tg.arn ]
+  target_group_arns   = [aws_lb_target_group.tg.arn]
   launch_template {
     id      = aws_launch_template.template.id
     version = "$Latest"
@@ -61,7 +61,7 @@ resource "aws_ecs_capacity_provider" "cluster_ecs" {
       maximum_scaling_step_size = 2
       minimum_scaling_step_size = 1
       status                    = "ENABLED"
-      target_capacity           = 100 
+      target_capacity           = 100
     }
   }
 }
@@ -90,6 +90,6 @@ resource "aws_ecs_cluster_capacity_providers" "example" {
 
 resource "aws_cloudwatch_log_group" "app" {
   name              = "/ecs/app"
-  retention_in_days = 7  
+  retention_in_days = 7
 }
 

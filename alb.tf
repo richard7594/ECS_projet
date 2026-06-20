@@ -27,7 +27,7 @@ resource "aws_lb_target_group" "tg" {
   target_type = "instance"
 
   stickiness {
-    type = "lb_cookie"
+    type    = "lb_cookie"
     enabled = true
   }
 
