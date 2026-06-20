@@ -61,12 +61,12 @@ resource "aws_ecs_capacity_provider" "cluster_ecs" {
       maximum_scaling_step_size = 2
       minimum_scaling_step_size = 1
       status                    = "ENABLED"
-      target_capacity           = 100 # Target 100% utilization of instances
+      target_capacity           = 100 
     }
   }
 }
 
-# 5. ECS Cluster & Association
+
 resource "aws_ecs_cluster" "cluster_ecs" {
   name = local.ecs_cluster_name
 

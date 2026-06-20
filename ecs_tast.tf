@@ -1,5 +1,6 @@
 
 ephemeral "aws_ecr_authorization_token" "ecr_token" { }
+
 data "aws_ecr_image" "image"{
   repository_name = "ecs_projet"
   image_tag = "app"
@@ -21,7 +22,7 @@ resource "aws_ecs_task_definition" "task" {
       portMappings = [
         {
           containerPort = 8080
-          hostPort      = 8081 # Dynamic port mapping (required for EC2/Bridge mode with multiple tasks)
+          hostPort      = 8081 
         }
       ]
 
@@ -43,7 +44,7 @@ resource "aws_ecs_service" "app" {
   name                 = "app"
   cluster              = aws_ecs_cluster.cluster_ecs.id
   task_definition      = aws_ecs_task_definition.task.arn
-  desired_count        = 1
+  desired_count        = 2 #number of task
   force_new_deployment = true
 
    capacity_provider_strategy {

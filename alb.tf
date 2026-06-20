@@ -26,6 +26,11 @@ resource "aws_lb_target_group" "tg" {
   vpc_id      = aws_vpc.vpc.id
   target_type = "instance"
 
+  stickiness {
+    type = "app_cookie"
+    enabled = true
+  }
+  
   health_check {
     path                = "/"
     unhealthy_threshold = 6
