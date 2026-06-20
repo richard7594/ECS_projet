@@ -5,15 +5,16 @@ on:
     - 'main'
   workflow_dispatch:  
 
+env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      REPO:  ${{ secrets.REPO }}  
+
 jobs:
   _build_:
     name : build_app_image
     runs-on: ubuntu-latest
     environment: DEV
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      REPO:  ${{ secrets.REPO }}
     steps:
     - uses: actions/checkout@v6
     - name: install docker AWS CLI
@@ -32,9 +33,6 @@ jobs:
     name: fmt
     runs-on: ubuntu-latest
     environment: DEV
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     container:
       image: hashicorp/terraform:latest
     steps:
@@ -53,9 +51,6 @@ jobs:
     name: validate
     runs-on: ubuntu-latest
     environment: DEV
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
     container:
       image: hashicorp/terraform:latest 
     steps:
@@ -76,9 +71,6 @@ jobs:
     name: plan
     runs-on: ubuntu-latest
     environment: DEV
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     container:
       image: hashicorp/terraform:latest
     steps:
@@ -101,9 +93,6 @@ jobs:
     name: apply
     runs-on: ubuntu-latest
     environment: PRD
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     container:
       image: hashicorp/terraform:latest  
     steps:
@@ -120,9 +109,6 @@ jobs:
     name: destroy
     runs-on: ubuntu-latest
     environment: PRD2
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     container:
       image: hashicorp/terraform:latest  
     steps:
