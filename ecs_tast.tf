@@ -20,7 +20,7 @@ resource "aws_ecs_task_definition" "task" {
       essential = true
       portMappings = [
         {
-          containerPort = 80
+          containerPort = 8080
           hostPort      = 0 # Dynamic port mapping (required for EC2/Bridge mode with multiple tasks)
         }
       ]
@@ -54,7 +54,7 @@ resource "aws_ecs_service" "app" {
   load_balancer {
     target_group_arn = aws_lb_target_group.tg.arn
     container_name   = "app"
-    container_port   = 80
+    container_port   = 8080
   }
 
   depends_on = [aws_lb_target_group.tg]
