@@ -21,7 +21,7 @@ jobs:
        curl -fsSL https://get.docker.com -o get-docker.sh && \
        sh get-docker.sh 
     - name: build  
-      run: docker build -t $REPO:1.0 .
+      run: docker build -t $REPO:app .
     - name: push image
       run: |
         aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin $REPO && \
@@ -117,7 +117,7 @@ jobs:
     needs: _plan_        
 
   _destroy_:
-    name: apply
+    name: destroy
     runs-on: ubuntu-latest
     environment: PRD
     env:
