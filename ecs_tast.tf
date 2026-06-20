@@ -21,7 +21,7 @@ resource "aws_ecs_task_definition" "task" {
       portMappings = [
         {
           containerPort = 8080
-          hostPort      = 0 # Dynamic port mapping (required for EC2/Bridge mode with multiple tasks)
+          hostPort      = 8081 # Dynamic port mapping (required for EC2/Bridge mode with multiple tasks)
         }
       ]
 

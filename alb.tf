@@ -21,7 +21,7 @@ resource "aws_lb_listener" "list" {
 
 resource "aws_lb_target_group" "tg" {
   name        = "ecs"
-  port        = "80"
+  port        = "8081"
   protocol    = "HTTP"
   vpc_id      = aws_vpc.vpc.id
   target_type = "instance"
